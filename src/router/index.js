@@ -6,6 +6,7 @@ const Category = () => import('views/category/Category');
 const Cart = () => import('views/cart/Cart');
 const Profile = () => import('views/profile/Profile');
 const Detail = () => import('views/detail/Detail');
+const Comments = () => import('views/coments/Comments');
 
 Vue.use(VueRouter);
 
@@ -16,7 +17,10 @@ const routes = [
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
+    // meta: {
+    //   keepAlive: true
+    // }
   },
   {
     path: '/category',
@@ -32,7 +36,12 @@ const routes = [
   },
   {
     path: '/detail',
-    component: Detail
+    component: Detail,
+  },
+  {
+    path: '/comments',
+    name: 'comments',
+    component: Comments
   }
 ];
 

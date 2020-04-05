@@ -1,6 +1,6 @@
 <template>
-    <div class="goods-item">
-      <img :src="getImageUrl(goodsItem.image)" alt="">
+    <div class="goods-item" @click="itemClick">
+      <img :src="getImageUrl(goodsItem.image)" alt="" @load="imageLoad">
       <div class="goods-info">
         <p>{{goodsItem.name}}</p>
         <span class="price">￥{{goodsItem.price}}</span>
@@ -30,6 +30,22 @@
           return function (imageUrl) {
             return this.root_path + "/" + imageUrl;
           }
+        }
+      },
+      methods: {
+        //监听图片加载完成
+        imageLoad() {
+          this.$bus.$emit("itemImageLoad")
+        },
+        itemClick() {
+          let shopId = this.goodsItem.id;
+
+          this.$router.push({
+            path: '/detail',
+            query: {
+              shopId
+            }
+          })
         }
       }
     }
