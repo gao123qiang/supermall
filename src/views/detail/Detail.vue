@@ -1,16 +1,17 @@
 <template>
     <div id="detail">
-      <detail-nav-bar class="detail-nav"></detail-nav-bar>
-      <scroll class="content" ref="scroll">
+      <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav"></detail-nav-bar>
+      <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
         <detail-swiper :top-images="detailSlides"></detail-swiper>
         <detail-base-info :goodsinfo="goodsinfo"></detail-base-info>
         <detail-shop-info :shopinfo="shopinfo"></detail-shop-info>
         <detail-goods-info :detailImages="detailImages" @imageLoad="imageLoad"></detail-goods-info>
-        <detail-size-info :detailsizeimage="goodssize" @imageSizeLoad="imageSizeLoad"></detail-size-info>
-        <detail-commpent-info :comment-info="commentInfo"></detail-commpent-info>
+        <detail-size-info ref="params" :detailsizeimage="goodssize" @imageSizeLoad="imageSizeLoad"></detail-size-info>
+        <detail-commpent-info ref="comment" :comment-info="commentInfo"></detail-commpent-info>
         <div class="title">------类似推介------</div>
-        <goods-list :goods="recomonds"></goods-list>
+        <goods-list ref="recommend" :goods="recomonds"></goods-list>
       </scroll>
+      <detail-bottom-bar></detail-bottom-bar>
     </div>
 </template>
 
@@ -22,6 +23,7 @@
     import DetailGoodsInfo from './childComps/DetailGoodsInfo'
     import DetailSizeInfo from  './childComps/DetailSizeInfo'
     import DetailCommpentInfo from './childComps/DetailCommpentInfo'
+    import DetailBottomBar from './childComps/DetailBottomBar'
 
     import Scroll from 'components/common/scroll/Scroll';
     import GoodsList from 'components/content/goods/GoodsList';
@@ -46,6 +48,9 @@
           recomonds: [],
           saveY: 0,
           //itemImgListener: null,
+          themeTopYs: [],
+          getThemeTopY: null,
+          currentIndex: 0
         }
       },
       components: {
@@ -57,7 +62,8 @@
         DetailGoodsInfo,
         DetailSizeInfo,
         DetailCommpentInfo,
-        GoodsList
+        GoodsList,
+        DetailBottomBar
       },
       //加入混入
       mixins: [itemListenerMixin],
@@ -71,7 +77,20 @@
         //获取评论信息
         this.getDetailGoodComs();
         //获取推介产品
-        this.getDetailRecommond()
+        this.getDetailRecommond();
+
+        this.getThemeTopY = debounce(() => {
+          this.themeTopYs = [];
+          this.themeTopYs.push(0);
+          this.themeTopYs.push(this.$refs.params.$el.offsetTop - 44);
+          this.themeTopYs.push(this.$refs.comment.$el.offsetTop - 44);
+          this.themeTopYs.push(this.$refs.recommend.$el.offsetTop - 44);
+          this.themeTopYs.push(Number.MAX_VALUE); //js中number的最大值
+        }, 100);
+
+        // this.$nextTick(() => {
+        //
+        // })
 
       },
       mounted() {
@@ -133,9 +152,35 @@
         },
         imageLoad () {
           this.$refs.scroll.refresh();
+          this.getThemeTopY();
         },
         imageSizeLoad() {
           this.$refs.scroll.refresh();
+        },
+        titleClick(index) {
+          this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 300);
+        },
+        //内容滚动
+        contentScroll(position) {
+          //方法1：
+          //获取y值
+          const positionY = -position.y;
+          //positionY和主题中的值进行对比
+          let length = this.themeTopYs.length;
+          // for (let i = 0; i < length; i++) {
+          //   if (this.currentIndex !== i && ((i < length - 1 && positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])
+          //     || (i === length - 1 && positionY >= this.themeTopYs[i]))) {
+          //       this.currentIndex = i;
+          //       this.$refs.nav.currentIndex = this.currentIndex;
+          //   }
+          // }
+          //方法2：利用一个最大值
+          for (let i = 0; i < length - 1; i++) {
+            if (this.currentIndex !== i && (positionY >= this.themeTopYs[i] && positionY < this.themeTopYs[i + 1])) {
+              this.currentIndex = i;
+              this.$refs.nav.currentIndex = this.currentIndex;
+            }
+          }
         }
       }
     }
@@ -156,7 +201,7 @@
   }
 
   .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 100px);
   }
 
   .title {
