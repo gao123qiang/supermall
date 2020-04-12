@@ -13,8 +13,9 @@
 <style scoped>
   .back-top {
     position: fixed;
+    z-index: 10;
     right: 5px;
-    bottom: 52px;
+    bottom: 70px;
   }
 
   .back-top img {

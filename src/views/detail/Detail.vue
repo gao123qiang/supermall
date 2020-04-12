@@ -11,7 +11,18 @@
         <div class="title">------类似推介------</div>
         <goods-list ref="recommend" :goods="recomonds"></goods-list>
       </scroll>
-      <detail-bottom-bar></detail-bottom-bar>
+
+      <!--回到顶部，监听组件的原生事件必须要用native修饰符编程原生组件-->
+      <transition name="scroll">
+        <back-top @click.native="backTop" v-show="curPosition >= 1500"></back-top>
+      </transition>
+
+      <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
+      <add-cart-popup :product="product"
+                      :dialogCartVisible="dialogCartVisible"
+                      v-show="dialogCartVisible"
+                      @close-dialog="closeDialog"></add-cart-popup>
+
     </div>
 </template>
 
@@ -24,15 +35,17 @@
     import DetailSizeInfo from  './childComps/DetailSizeInfo'
     import DetailCommpentInfo from './childComps/DetailCommpentInfo'
     import DetailBottomBar from './childComps/DetailBottomBar'
+    import AddCartPopup from './childComps/AddCartPopup'
 
     import Scroll from 'components/common/scroll/Scroll';
     import GoodsList from 'components/content/goods/GoodsList';
+    import BackTop from 'components/content/backTop/BackTop'
 
     import {getDetailSlide, GoodsInfo, getShopInfo, ShopInfo, getGoodComments, commentsInfo
-            , getRecomonds} from 'network/detail'
+            , getRecomonds, getGoodSpecs} from 'network/detail'
 
     import {debounce} from "common/utils/utils";
-    import {itemListenerMixin} from "common/mixin";
+    import {itemListenerMixin, backTopMixin} from "common/mixin";
 
     export default {
       name: "Detail",
@@ -50,7 +63,9 @@
           //itemImgListener: null,
           themeTopYs: [],
           getThemeTopY: null,
-          currentIndex: 0
+          currentIndex: 0,
+          dialogCartVisible: false,
+          product: {},
         }
       },
       components: {
@@ -63,10 +78,12 @@
         DetailSizeInfo,
         DetailCommpentInfo,
         GoodsList,
-        DetailBottomBar
+        DetailBottomBar,
+        BackTop,
+        AddCartPopup
       },
       //加入混入
-      mixins: [itemListenerMixin],
+      mixins: [itemListenerMixin, backTopMixin],
       created() {
         //保存传入的商品id
         this.shopId = this.$route.query.shopId;
@@ -78,6 +95,9 @@
         this.getDetailGoodComs();
         //获取推介产品
         this.getDetailRecommond();
+
+        //请求产品规格参数
+        this.getDetailGoodsSpecs();
 
         this.getThemeTopY = debounce(() => {
           this.themeTopYs = [];
@@ -150,6 +170,13 @@
 
           })
         },
+        getDetailGoodsSpecs() {
+          getGoodSpecs(this.shopId).then(res => {
+            if (res.status === 200) {
+              this.product.specs = res.specs;
+            }
+          });
+        },
         imageLoad () {
           this.$refs.scroll.refresh();
           this.getThemeTopY();
@@ -165,6 +192,7 @@
           //方法1：
           //获取y值
           const positionY = -position.y;
+          this.curPosition = positionY;
           //positionY和主题中的值进行对比
           let length = this.themeTopYs.length;
           // for (let i = 0; i < length; i++) {
@@ -181,6 +209,20 @@
               this.$refs.nav.currentIndex = this.currentIndex;
             }
           }
+        },
+        //添加购物车
+        addToCart() {
+          //获取购物车需要展示的信息
+          this.dialogCartVisible = true;
+          this.product.image = this.detailImages[0];
+          this.product.name = this.goodsinfo.single.shopname;
+          this.product.price = this.goodsinfo.single.price;
+          this.product.goodid = this.shopId;
+        },
+        closeDialog() {
+          this.product = {};
+          this.dialogCartVisible = false;
+          this.getDetailGoodsSpecs();
         }
       }
     }
@@ -211,5 +253,21 @@
     font-weight: bold;
     font-size: 16px;
     border-bottom: 1px solid rgba(0,0,0,.1);
+  }
+
+  /* vue的淡入淡出动画 */
+  .scroll-enter-active,
+  .scroll-leave-active {
+    transition: all 0.3s;
+  }
+
+  .scroll-enter,
+  .scroll-leave-to {
+    opacity: 0;
+  }
+
+  .scroll-enter-to,
+  .scroll-leave {
+    opacity: 1;
   }
 </style>

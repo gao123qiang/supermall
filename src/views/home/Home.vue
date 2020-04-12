@@ -25,7 +25,10 @@
         <goods-list :goods="showGoods"></goods-list>
       </scroll>
       <!--组件监听用的是native-->
-      <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+      <!--回到顶部，监听组件的原生事件必须要用native修饰符编程原生组件-->
+      <transition name="scroll">
+        <back-top @click.native="backTop" v-show="curPosition >= 1500"></back-top>
+      </transition>
     </div>
 </template>
 
@@ -43,7 +46,7 @@
     import {getSlideShow, getFeatures, getHomeGoods} from 'network/home';
 
     import {debounce} from "common/utils/utils";
-    import {itemListenerMixin} from "common/mixin";
+    import {itemListenerMixin, backTopMixin} from "common/mixin";
 
     export default {
       name: "Home",
@@ -74,7 +77,7 @@
           //itemImgListener: null,
         }
       },
-      mixins: [itemListenerMixin],
+      mixins: [itemListenerMixin, backTopMixin],
       created() {
         this.getHomeSlideShow();
         this.getHomeFeatures();
@@ -153,17 +156,18 @@
           this.$refs.tabControl1.currentIndex = index;
           this.$refs.tabControl2.currentIndex = index;
         },
-        backClick() {
-          //scrollTo(x, y, 延时(毫秒)),回到什么位置
-          //方法1
-          // this.$refs.scroll.scroll.scrollTo(0, 0, 500);
-          //方法2
-          this.$refs.scroll.scrollTo(0, 0, 500);
-        },
+        // backClick() {
+        //   //scrollTo(x, y, 延时(毫秒)),回到什么位置
+        //   //方法1
+        //   // this.$refs.scroll.scroll.scrollTo(0, 0, 500);
+        //   //方法2
+        //   this.$refs.scroll.scrollTo(0, 0, 500);
+        // },
         //backtop显示和隐藏的函数
         contentScroll (position) {
           //判断backtop是否显示
-          this.isShowBackTop = -position.y > 1000;
+          // this.isShowBackTop = -position.y > 1000;
+          this.curPosition = -position.y;
           //判断tabcontrol是否吸顶
           this.isTabFixed = (-position.y) > this.tabOffestTop;
         },
@@ -221,5 +225,21 @@
     right: 0;
     /*height: calc(100% - 93px);*/
     /*margin-top: 44px;*/
+  }
+
+  /* vue的淡入淡出动画 */
+  .scroll-enter-active,
+  .scroll-leave-active {
+    transition: all 0.3s;
+  }
+
+  .scroll-enter,
+  .scroll-leave-to {
+    opacity: 0;
+  }
+
+  .scroll-enter-to,
+  .scroll-leave {
+    opacity: 1;
   }
 </style>

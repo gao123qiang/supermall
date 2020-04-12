@@ -36,6 +36,16 @@ export function getRecomonds(goodId) {
   })
 }
 
+//请求产品规格参数的接口
+export function getGoodSpecs(goodId) {
+  return request({
+    url: '/goods/goodspecs/',
+    params: {
+      goodId
+    }
+  })
+}
+
 //整合数据，创建一个对象
 export class GoodsInfo {
   constructor(busensures, single) {
@@ -58,3 +68,4 @@ export class commentsInfo {
     this.goodid = goodid;
   }
 }
+

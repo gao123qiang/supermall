@@ -21,3 +21,18 @@ export const itemListenerMixin = {
     //所有的组件都一个属性$el,用户获取组件中的元素
   }
 };
+
+export const backTopMixin = {
+  data() {
+    return {
+      //当前滚动的位置
+      curPosition: 0
+    }
+  },
+  methods: {
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0, 500);
+    }
+  }
+};
+
