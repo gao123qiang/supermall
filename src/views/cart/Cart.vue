@@ -29,7 +29,6 @@
       data() {
         return {
           isRightSwitch: false,
-          userid: 1,
         }
       },
       components: {
@@ -46,7 +45,7 @@
       created() {
         //打开购物车界面时，请求购物车数据库数据,通过vuex来记录
         //从服务器获取数据
-        getCartData(this.userid).then(res => {
+        getCartData().then(res => {
           if (res.status === 200) {
             this.$store.dispatch('showCartData', res.cart);
           }

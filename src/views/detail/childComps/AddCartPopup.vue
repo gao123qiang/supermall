@@ -159,15 +159,16 @@
         // this.$store.commit('addCart', obj);
 
         //添加到数据库
-        let userid = 1;
+        // let userid = 1;
         let count = 1;
         //添加购物车，向服务器提交数据
-        addToCart(userid, this.product.goodid, this.radioColor, this.radioSize, count).then(res => {
+        addToCart(this.product.goodid, this.radioColor, this.radioSize, count).then(res => {
           if (res.status === 200) {
             //下面使用vuex存入
             this.$store.dispatch('addCart', obj).then(res => {
               this.$toast.toastShow(res, 3000);
-            }).catch(() => {
+            }
+            ).catch(() => {
               this.$toast.toastShow("商品添加失败");
             });
           }else {

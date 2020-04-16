@@ -1,5 +1,5 @@
 <template>
-    <div class="goods">
+    <div class="goods" ref="goods">
       <goods-list-item v-for="(item, index) in goods" :goods-item="item"></goods-list-item>
     </div>
 </template>
@@ -19,7 +19,7 @@
             return []
           }
         }
-      }
+      },
     }
 </script>
 
@@ -31,4 +31,9 @@
     justify-content: space-around;
     padding: 2px;
   }
+
+  .goods:last-child {
+
+  }
+
 </style>

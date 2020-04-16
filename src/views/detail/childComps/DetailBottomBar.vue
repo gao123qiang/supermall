@@ -10,7 +10,8 @@
           <span class="text">店铺</span>
         </div>
         <div>
-          <i class="icon select"></i>
+          <i v-if="isfav"></i>
+          <i class="icon select" v-else></i>
           <span class="text">收藏</span>
         </div>
       </div>
@@ -22,11 +23,29 @@
 </template>
 
 <script>
+    import { mapGetters } from 'vuex'
+
     export default {
         name: "DetailBottomBar",
+        props: {
+          isfav: {
+            type: Boolean,
+            default: false
+          }
+        },
         methods: {
+          ...mapGetters(['getUserName']),
+
           addToCart() {
-            this.$emit("addToCart")
+            if (this.getUserName) {
+              this.$emit("addToCart")
+            }else {
+              this.$toast.toastShow("您还没有登录");
+
+              setTimeout(() => {
+                this.$router.push('/login');
+              },500);
+            }
           }
         }
     }

@@ -35,5 +35,24 @@ export default {
   },
   delCartData(context, payload) {
     context.commit('delCart')
+  },
+  changeLogin(context, payload) {
+    context.commit('addToken', payload)
+  },
+  //收藏
+  //添加收藏
+  addFav(context, payload) {
+    return new Promise((resolve, reject) => {
+      if (payload) {
+        context.commit('addFavCommit', payload);
+        resolve("添加成功")
+      }else {
+        reject("添加失败")
+      }
+    })
+  },
+  //删除收藏
+  delFav(context, payload) {
+    context.commit("delFavCommit")
   }
 }

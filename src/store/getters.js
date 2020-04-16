@@ -5,5 +5,19 @@ export default {
   },
   cartList(state) {
     return state.cartList;
+  },
+  //获取token
+  getToken(state) {
+    return state.Authorization;
+  },
+  getUserName(state) {
+    return state.username;
+  },
+  //收藏
+  favLength(state) {
+    return state.favlist.length;
+  },
+  favList(state) {
+    return state.favlist
   }
 }

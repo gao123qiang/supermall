@@ -9,7 +9,10 @@ import getters from './getters'
 Vue.use(Vuex);
 
 const state = {
-  cartList: []
+  cartList: [],
+  Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization'): '',
+  username: localStorage.getItem('username') ? localStorage.getItem('username'): '',
+  favlist: [],
 };
 
 //2.插件store对象

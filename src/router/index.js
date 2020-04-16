@@ -7,6 +7,10 @@ const Cart = () => import('views/cart/Cart');
 const Profile = () => import('views/profile/Profile');
 const Detail = () => import('views/detail/Detail');
 const Comments = () => import('views/coments/Comments');
+const Login = () => import('views/login/Login');
+const Register = () => import('views/register/Register');
+const NewPassword = () => import('views/newpassword/NewPassword');
+const Favorite = () => import('views/favorite/Favorite');
 
 Vue.use(VueRouter);
 
@@ -42,6 +46,22 @@ const routes = [
     path: '/comments',
     name: 'comments',
     component: Comments
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/register',
+    component: Register
+  },
+  {
+    path: '/forget',
+    component: NewPassword
+  },
+  {
+    path: '/favorite',
+    component: Favorite
   }
 ];
 

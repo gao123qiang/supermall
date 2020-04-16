@@ -1,11 +1,10 @@
 import request from './request'
 
-export function addToCart(userid, goodid, color, size, count) {
+export function addToCart(goodid, color, size, count) {
   return request({
     url: '/trade/addcart/',
     method: 'post',
     data: {
-      userid,
       goodid,
       color,
       size,
@@ -14,12 +13,9 @@ export function addToCart(userid, goodid, color, size, count) {
   })
 }
 
-export function getCartData(userid) {
+export function getCartData() {
   return request({
-    url: '/trade/getcart/',
-    params: {
-      userid
-    }
+    url: '/trade/getcart/'
   })
 }
 

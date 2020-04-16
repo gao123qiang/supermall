@@ -17,7 +17,7 @@
         <back-top @click.native="backTop" v-show="curPosition >= 1500"></back-top>
       </transition>
 
-      <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
+      <detail-bottom-bar @addToCart="addToCart" :isfav="isFav"></detail-bottom-bar>
       <add-cart-popup :product="product"
                       :dialogCartVisible="dialogCartVisible"
                       v-show="dialogCartVisible"
@@ -66,6 +66,7 @@
           currentIndex: 0,
           dialogCartVisible: false,
           product: {},
+          isFav: false
         }
       },
       components: {
