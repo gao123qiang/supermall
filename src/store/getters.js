@@ -19,5 +19,19 @@ export default {
   },
   favList(state) {
     return state.favlist
+  },
+
+  //签到
+  getisSign(state) {
+    return state.signobj.isSign;
+  },
+  getisLottery(state) {
+    return state.signobj.isStart;
+  },
+  getSignList(state) {
+    return state.signobj.monthSignList;
+  },
+  getSignLength(state) {
+    return state.signobj.monthSignList.length;
   }
 }

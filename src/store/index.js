@@ -13,6 +13,11 @@ const state = {
   Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization'): '',
   username: localStorage.getItem('username') ? localStorage.getItem('username'): '',
   favlist: [],
+  signobj: {
+    isSign: false,
+    monthSignList: [],
+    isStart: 0
+  }
 };
 
 //2.插件store对象

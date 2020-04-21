@@ -9,15 +9,43 @@
   import FavNavBar from './childComps/FavNavBar'
   import FavListInfo from './childComps/FavListinfo'
 
+  import { axiosGetFavs } from "network/favorite";
+
+  import { mapActions } from 'vuex'
+
   export default {
     name: "Favorite",
+    data() {
+      return {
+
+      }
+    },
     components: {
       FavListInfo,
       FavNavBar
     },
+    created() {
+      //请求收藏的数据
+      this.showDataFavs();
+    },
     methods: {
+      ...mapActions(['showFavs']),
+
       bottomShow() {
         this.$refs.favlist.isShow = !this.$refs.favlist.isShow;
+      },
+
+      showDataFavs() {
+        axiosGetFavs().then(res => {
+          if (res.status === 200) {
+            if (res.favs.length === 0) {
+              this.$toast.toastShow("您还没有收藏，尽快去添加收藏吧")
+            }
+            this.showFavs(res.favs)
+          }
+        }).catch(error => {
+          this.$toast.toastShow("服务器繁忙")
+        })
       }
     }
   }

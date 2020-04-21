@@ -1,16 +1,17 @@
 <template>
     <div class="fav-list-info">
-      <scroll class="scroll-height">
-        <div class="fav-item">
+      <scroll class="scroll-height" ref="scroll">
+        <div class="fav-item" v-for="(item, index) in favList">
           <div class="item-selector">
-            <check-button></check-button>
+            <check-button :value="item.checked"
+                          @click.native="checkedChange(item)"></check-button>
           </div>
           <div class="item-img">
-            <img src="~assets/img/login/bj.png" alt="">
+            <img :src="item.image" alt="">
           </div>
           <div class="item-info">
-            <div class="item-title">年号啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</div>
-            <div class="item-price">￥ 200.00</div>
+            <div class="item-title">{{item.name}}</div>
+            <div class="item-price">￥ {{item.price}}</div>
           </div>
         </div>
       </scroll>
@@ -20,12 +21,12 @@
           <!--<van-checkbox class="checked-all">-->
           <!--全选-->
           <!--</van-checkbox>-->
-          <check-button></check-button>
+          <check-button :value="isSelectAll" @click.native="changeAll"></check-button>
           <p>全选</p>
         </div>
         <div>
           <div class="fav-bottom-btn">
-            <button>删除</button>
+            <button @click="delFavsClick">删除({{checkLength}})</button>
           </div>
         </div>
       </div>
@@ -35,6 +36,10 @@
 <script>
   import Scroll from 'components/common/scroll/Scroll'
   import CheckButton from '../../cart/childComps/CheckButton'
+
+  import {axiosDelFavs} from "network/favorite";
+
+  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: "FavListinfo",
@@ -46,6 +51,69 @@
     components: {
       Scroll,
       CheckButton
+    },
+    created() {
+      //上面的按钮回到初始的位置
+      this.isShowChange();
+    },
+    activated() {
+      this.$refs.scroll.refresh();
+    },
+    computed: {
+      ...mapGetters(['favList', 'favLength']),
+
+      isSelectAll() {
+        if (this.favLength === 0) {
+          return false
+        }
+        return !this.favList.find(item => !item.checked)
+      },
+      checkLength() {
+        return this.favList.filter(item => item.checked).length
+      }
+    },
+    methods: {
+      ...mapActions(['delSomeFav', 'changeFav', 'changeAllFav', 'changeAllTrue']),
+
+      checkedChange(item) {
+        // item.checked = !item.checked
+        this.changeFav(item)
+      },
+      changeAll() {
+        console.log(this.isSelectAll);
+        if (this.isSelectAll) {
+          // this.favList.forEach(item => item.checked = false)
+          this.changeAllFav();
+        }else {
+          // this.favList.forEach(item => item.checked = true)
+          this.changeAllTrue();
+        }
+      },
+      isShowChange() {
+        this.isShow = false
+      },
+      delFavsClick() {
+        if (this.checkLength === 0) {
+          this.$toast.toastShow("您还没有选中要删除的藏品")
+        }else {
+          let ids = [];
+          this.favList.filter(item => {
+            if (item.checked) {
+              ids.push(item.id)
+            }
+          });
+          //服务器删除和vuex中删除
+          axiosDelFavs(ids).then(res => {
+            console.log(res);
+            if (res.status === 200) {
+              this.delSomeFav();
+              this.$toast.toastShow("删除成功")
+            }else {
+              this.$toast.toastShow("服务器繁忙")
+            }
+          })
+        }
+      }
     }
   }
 </script>

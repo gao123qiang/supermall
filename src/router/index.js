@@ -11,6 +11,8 @@ const Login = () => import('views/login/Login');
 const Register = () => import('views/register/Register');
 const NewPassword = () => import('views/newpassword/NewPassword');
 const Favorite = () => import('views/favorite/Favorite');
+const CheckDaily = () => import('views/profile/comps/checkdaily/CheckDaily');
+const Address = () => import('views/profile/comps/address/Address');
 
 Vue.use(VueRouter);
 
@@ -39,6 +41,10 @@ const routes = [
     component: Profile
   },
   {
+    path: '/profile/sign',
+    component: CheckDaily
+  },
+  {
     path: '/detail',
     component: Detail,
   },
@@ -62,6 +68,10 @@ const routes = [
   {
     path: '/favorite',
     component: Favorite
+  },
+  {
+    path: '/profile/address',
+    component: Address
   }
 ];
 

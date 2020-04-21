@@ -11,7 +11,7 @@
           <div class="aui-user-name" v-else>
             <span>登录</span>
           </div>
-          <div class="aui-user-btn">
+          <div class="aui-user-btn" @click="signClick">
             <button><i class="icon icon-in"></i>每日签到</button>
           </div>
         </div>
@@ -46,6 +46,11 @@
       loginClick() {
         this.$router.push({
           path: '/login'
+        })
+      },
+      signClick() {
+        this.$router.push({
+          path: '/profile/sign'
         })
       }
     }

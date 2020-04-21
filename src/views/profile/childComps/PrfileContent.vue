@@ -14,13 +14,13 @@
             <span></span>
           </div>
         </div>
-        <div class="pro-mon-item">
+        <div class="pro-mon-item" @click="addressClick">
           <div class="pro-left">
             <div class="cou-img">
               <img src="~assets/img/profile/icon-fl-002.png" alt="">
             </div>
             <div class="mon-box">
-              <p>账户管理</p>
+              <p>我的地址</p>
             </div>
           </div>
           <div class="mon-arrow">
@@ -89,6 +89,9 @@
       methods: {
         favClick() {
           this.$router.push('/favorite')
+        },
+        addressClick() {
+          this.$router.push('/profile/address')
         }
       }
     }

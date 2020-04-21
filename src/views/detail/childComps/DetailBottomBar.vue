@@ -9,8 +9,10 @@
           <i class="icon shop"></i>
           <span class="text">店铺</span>
         </div>
-        <div>
-          <i v-if="isfav"></i>
+        <div class="favorite" @click="addFavClick">
+          <i v-if="isfav" class="fav">
+            <img src="~assets/img/detail/fav.png" alt="">
+          </i>
           <i class="icon select" v-else></i>
           <span class="text">收藏</span>
         </div>
@@ -27,10 +29,15 @@
 
     export default {
         name: "DetailBottomBar",
-        props: {
-          isfav: {
-            type: Boolean,
-            default: false
+        // props: {
+        //   isfav: {
+        //     type: Boolean,
+        //     default: false
+        //   }
+        // },
+        data() {
+          return {
+            isfav: false
           }
         },
         methods: {
@@ -46,6 +53,10 @@
                 this.$router.push('/login');
               },500);
             }
+          },
+          addFavClick() {
+            this.isfav = !this.isfav;
+            this.$emit("isFavClick", this.isfav)
           }
         }
     }
@@ -75,6 +86,24 @@
 
   .bar-left .text {
     font-size: 13px;
+  }
+
+  .favorite {
+    display: flex;
+    flex-direction: column;
+    /*align-items: center;*/
+    justify-content: center;
+    /*margin: 10px auto 3px;*/
+
+  }
+
+  .fav {
+    padding: 8px 0 1px 0;
+  }
+
+  .fav img{
+    width: 22px;
+    height: 22px;
   }
 
   .bar-left .icon {

@@ -46,19 +46,83 @@ export default {
 
   //收藏
   //添加收藏
-  addFav(state, payload) {
+  addFavCommit(state, payload) {
     payload.checked = true;
     state.favlist.push(payload)
   },
 
-  //删除收藏
+  //取消收藏
   delFavCommit(state, payload) {
-    let result = state.favlist.filter(item => item.checked !== true)
+    // let result = state.favlist.filter(payload => payload.checked !== true);
+    //
+    // if (result.length === 0) {
+    //   state.favlist = []
+    // }else {
+    //   state.favlist = result
+    // }
+    // state.favlist.forEach(item => {
+    //   if (item.goodid === payload.goodid) {
+    //     state.favlist.remove(item)
+    //   }
+    // })
+    for (let i = 0; i < state.favlist.length; i++) {
+      if (state.favlist[i].goodid === payload.goodid) {
+        state.favlist.splice(i, 1)
+      }
+    }
+  },
+
+  showFavsCommit(state, payload) {
+    state.favlist = payload
+  },
+
+  defSomeFavCommit(state, payload) {
+    let result = state.favlist.filter(item => item.checked !== true);
 
     if (result.length === 0) {
       state.favlist = []
     }else {
       state.favlist = result
+    }
+  },
+
+  changeFavCommit(state, payload) {
+    for (let item of state.favlist) {
+      if (item.goodid === payload.goodid) {
+        item.checked = !item.checked;
+      }
+    }
+  },
+
+  changeAllCommit(state, payload) {
+    // state.favList.forEach(item => item.checked = false)
+    for (let item of state.favlist) {
+      item.checked = false
+    }
+  },
+
+  changeAllTrueCommit(state, payload) {
+    // state.favList.forEach(item => item.checked = true)
+    for (let item of state.favlist) {
+      item.checked = true
+    }
+  },
+
+  //签到
+  addSignCommit(state, payload) {
+    state.signobj.isSign = true;
+    state.signobj.isStart = 1;
+  },
+  addlotteryCommit(state, payload) {
+    state.signobj.isStart = 2;
+  },
+  flushSingCommit(state, payload) {
+    state.signobj.monthSignList = payload.signlists;
+    state.signobj.isSign = payload.isSign;
+    if (payload.isLottery) {
+      state.signobj.isStart = 2;
+    }else {
+      state.signobj.isStart = 0;
     }
   }
 }

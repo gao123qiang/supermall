@@ -51,8 +51,37 @@ export default {
       }
     })
   },
-  //删除收藏
+  //取消收藏
   delFav(context, payload) {
-    context.commit("delFavCommit")
+    context.commit("delFavCommit", payload)
+  },
+  //删除收藏
+  delSomeFav(context, paylaod) {
+    context.commit('defSomeFavCommit')
+  },
+  //添加所有收藏的商品
+  showFavs(context, payload) {
+    context.commit('showFavsCommit', payload)
+  },
+  //改变状态
+  changeFav(context, payload) {
+    context.commit("changeFavCommit", payload)
+  },
+  changeAllFav(context, payload) {
+    context.commit('changeAllCommit')
+  },
+  changeAllTrue(context, payload) {
+    context.commit('changeAllTrueCommit')
+  },
+
+  //签到
+  addSign(context, payload) {
+    context.commit('addSignCommit', payload)
+  },
+  addlottery(context, payload) {
+    context.commit('addlotteryCommit', payload)
+  },
+  flushSing(context, payload) {
+    context.commit('flushSingCommit', payload)
   }
 }

@@ -35,3 +35,14 @@ export function formatDate(date, fmt) {
 function padLeftZero (str) {
   return ('00' + str).substr(str.length);
 };
+
+//获取当天的年月日，并格式化为yyyy/mm/dd
+export function getNowFormatDate() {
+  let date = new Date();
+  let sep = "/";
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let strDate = date.getDate();
+  let currentdate = year + sep + month + sep + strDate;
+  return currentdate
+}

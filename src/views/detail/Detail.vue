@@ -17,7 +17,7 @@
         <back-top @click.native="backTop" v-show="curPosition >= 1500"></back-top>
       </transition>
 
-      <detail-bottom-bar @addToCart="addToCart" :isfav="isFav"></detail-bottom-bar>
+      <detail-bottom-bar @addToCart="addToCart" @isFavClick="isFavClick" ref="detailbottom"></detail-bottom-bar>
       <add-cart-popup :product="product"
                       :dialogCartVisible="dialogCartVisible"
                       v-show="dialogCartVisible"
@@ -47,6 +47,10 @@
     import {debounce} from "common/utils/utils";
     import {itemListenerMixin, backTopMixin} from "common/mixin";
 
+    import { axiosAddFav, axiosDelFav} from "network/favorite";
+
+    import { mapActions } from 'vuex'
+
     export default {
       name: "Detail",
       data() {
@@ -66,7 +70,7 @@
           currentIndex: 0,
           dialogCartVisible: false,
           product: {},
-          isFav: false
+          ids: [],
         }
       },
       components: {
@@ -134,11 +138,13 @@
       },
       deactivated() {
         //记录上次的位置
-        this.saveY = this.$refs.scroll.getScrollY()
+        this.saveY = this.$refs.scroll.getScrollY();
         //取消全局事件的监听
         this.$bus.$off('itemImageLoad', this.itemImgListener);
       },
       methods: {
+        ...mapActions(['addFav', 'delFav']),
+
         getDetailSlides() {
           getDetailSlide(this.shopId).then(res => {
             if (res.status === 200) {
@@ -224,6 +230,41 @@
           this.product = {};
           this.dialogCartVisible = false;
           this.getDetailGoodsSpecs();
+        },
+        isFavClick(isfav) {
+          //点击了收藏
+          let goodid = this.shopId;
+
+          const obj = {};
+          obj.goodid = this.shopId;
+          obj.image = this.detailImages[0];
+          obj.name = this.goodsinfo.single.shopname;
+          obj.price = this.goodsinfo.single.price;
+
+          if (isfav) {
+            axiosAddFav(goodid).then(res => {
+              if (res.status === 200) {
+                this.addFav(obj).then(res => {
+                  this.$toast.toastShow("收藏成功")
+                }).catch(error => {
+                  this.$toast.toastShow("收藏失败")
+                });
+              }else {
+                this.$toast.toastShow("收藏失败")
+              }
+            })
+          }else {
+            axiosDelFav(goodid).then(res => {
+              if (res.status === 200) {
+                this.delFav(obj);
+                this.$toast.toastShow("取消成功");
+                this.ids = [];
+              }else {
+                this.$refs.detailbottom.isfav = true;
+                this.$toast.toastShow("取消失败，不要多次点击")
+              }
+            })
+          }
         }
       }
     }
