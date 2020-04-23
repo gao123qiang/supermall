@@ -83,5 +83,28 @@ export default {
   },
   flushSing(context, payload) {
     context.commit('flushSingCommit', payload)
+  },
+
+  //收货地址跳转参数
+  addressTo(context, payload) {
+    context.commit('addressToCommit', payload)
+  },
+  changeAddressSwitch(context, payload) {
+    context.commit('changeAddressSwitchCommit')
+  },
+  addAddressActions(context, payload) {
+    context.commit('addAddressActionsCommit', payload)
+  },
+  //我的地址页面刷新时
+  setAddressListActions(context, payload) {
+    context.commit('setAddressListActionsCommit', payload)
+  },
+  //删除我的地址
+  delAddressListActions(context, payload) {
+    context.commit('delAddressListActionsCommit', payload)
+  },
+  //更新我的地址
+  updateAddressListActions(context, payload) {
+    context.commit('updateAddressListActionsCommit', payload)
   }
 }

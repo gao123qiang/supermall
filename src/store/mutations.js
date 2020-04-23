@@ -124,5 +124,26 @@ export default {
     }else {
       state.signobj.isStart = 0;
     }
+  },
+  addressToCommit(state, payload) {
+    state.addressEdit = payload;
+  },
+  changeAddressSwitchCommit(state, payload) {
+    state.addressEdit.value = !state.addressEdit.value
+  },
+  addAddressActionsCommit(state, payload) {
+    state.addressList.push(payload)
+  },
+  setAddressListActionsCommit(state, payload) {
+    state.addressList = payload;
+  },
+  delAddressListActionsCommit(state, payload) {
+    state.addressList.splice(payload, 1);
+  },
+  updateAddressListActionsCommit(state, payload) {
+    let index = payload.index;
+    state.addressList.splice(index, 1);
+    delete payload.index;
+    state.addressList.push(payload)
   }
 }

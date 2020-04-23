@@ -1,21 +1,21 @@
 <template>
     <div class="content">
-      <div class="content-item">
+      <div class="content-item" v-for="(item, index) in getAddressList">
         <div class="left">
           <div class="left-quan">
-            <span>李</span>
+            <span>{{nameFenGe(item.username)}}</span>
           </div>
         </div>
         <div class="center">
           <div class="center-top">
-            <span class="name">李美梅</span>
-            <span>18713351672</span>
+            <span class="name">{{item.username}}</span>
+            <span>{{item.phone}}</span>
           </div>
           <div class="center-bottom">
-            <span>北京 北京市 朝阳区 八里庄街道 北京市朝阳区东四环中路远洋国际中心A座2006室</span>
+            <span>{{addressHeBing(item.selectAddress, item.detailAddress)}}</span>
           </div>
         </div>
-        <div class="right">
+        <div class="right" @click="changeAddressClick(index)">
           <p>编辑</p>
         </div>
       </div>
@@ -23,9 +23,59 @@
 </template>
 
 <script>
-    export default {
-        name: "addressContent"
+  import { axiosGetAddress } from "network/address";
+
+  import { mapGetters, mapActions } from 'vuex'
+
+  export default {
+    name: "addressContent",
+    data() {
+      return {
+        addresslist: []
+      }
+    },
+    created() {
+      //获取地址数据
+      this.axiosGetAddressCreate();
+    },
+    computed: {
+      ...mapGetters(['getAddressList']),
+
+      nameFenGe() {
+        return function (username) {
+          return username[0]
+        }
+      },
+      addressHeBing() {
+        return function (select, detail) {
+          return select + ' ' + detail;
+        }
+      }
+    },
+    methods: {
+      ...mapActions(['setAddressListActions']),
+
+      axiosGetAddressCreate() {
+        axiosGetAddress().then(res => {
+          if (res.status === 200) {
+            this.setAddressListActions(res.addresslist);
+          }else{
+            this.$toast.toastShow("您还没有添加地址")
+          }
+        }).catch(error => {
+          this.$toast.toastShow("请稍后再试")
+        })
+      },
+      changeAddressClick(index) {
+        this.$router.push({
+          path: '/profile/address/change',
+          query: {
+            index
+          }
+        })
+      }
     }
+  }
 </script>
 
 <style scoped>

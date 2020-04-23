@@ -17,7 +17,11 @@ const state = {
     isSign: false,
     monthSignList: [],
     isStart: 0
-  }
+  },
+  //收货地址按钮跳转
+  addressEdit: {},
+  //收货地址列表
+  addressList: []
 };
 
 //2.插件store对象

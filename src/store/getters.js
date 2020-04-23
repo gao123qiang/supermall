@@ -33,5 +33,13 @@ export default {
   },
   getSignLength(state) {
     return state.signobj.monthSignList.length;
+  },
+
+  //收货地址跳转
+  getAddressTo(state) {
+    return state.addressEdit
+  },
+  getAddressList(state) {
+    return state.addressList
   }
 }

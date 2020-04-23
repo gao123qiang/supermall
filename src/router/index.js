@@ -13,6 +13,8 @@ const NewPassword = () => import('views/newpassword/NewPassword');
 const Favorite = () => import('views/favorite/Favorite');
 const CheckDaily = () => import('views/profile/comps/checkdaily/CheckDaily');
 const Address = () => import('views/profile/comps/address/Address');
+const AddressEidt = () => import('views/profile/comps/addressEdit/AddressEdit');
+const AddressChange = () => import('views/profile/comps/addressChange/AddressChange');
 
 Vue.use(VueRouter);
 
@@ -72,6 +74,14 @@ const routes = [
   {
     path: '/profile/address',
     component: Address
+  },
+  {
+    path: '/profile/address/edit',
+    component: AddressEidt
+  },
+  {
+    path: '/profile/address/change',
+    component: AddressChange
   }
 ];
 
